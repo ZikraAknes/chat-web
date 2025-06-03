@@ -7,7 +7,6 @@ app_name = 'chat_app'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('api/messages/', views.get_messages, name='get_messages'),
 ]
 
 if settings.DEBUG:

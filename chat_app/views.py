@@ -20,21 +20,3 @@ def home(request):
         'messages': messages,
         'participant_names': participant_names
     })
-
-def get_messages(request):
-    messages = Message.objects.all().order_by('id')
-    message_list = []
-    
-    for message in messages:
-        message_list.append({
-            'id': message.id,
-            'participant_id': message.participant.id,
-            'participant_name': message.participant.name,
-            'participant_avatar': message.participant.avatar,
-            'content': message.content,
-            'message_type': message.message_type,
-            'delay': message.delay,
-            'timestamp': message.timestamp.strftime('%I:%M %p')
-        })
-    
-    return JsonResponse({'messages': message_list})

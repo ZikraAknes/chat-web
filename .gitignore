@@ -1,16 +1,16 @@
-   # Python
-   __pycache__/
-   *.py[cod]
-   *$py.class
-   *.so
-   .Python
-   venv/
-   ENV/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
    
-   # Django
-   *.log
-   db.sqlite3
-   media/
-   
-   # Local settings
-   .env
+# Django
+*.log
+db.sqlite3
+media/
+
+# Local settings
+.env
