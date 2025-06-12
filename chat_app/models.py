@@ -18,6 +18,7 @@ class Message(models.Model):
     
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
     content = models.TextField()
+    caption = models.TextField(blank=True, null=True)  # Optional caption field for image messages
     timestamp = models.DateTimeField(auto_now_add=True)
     message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES, default='text')
     delay = models.IntegerField(default=3000)  # Delay in milliseconds before this message appears
