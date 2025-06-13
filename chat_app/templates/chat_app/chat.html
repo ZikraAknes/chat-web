@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp-like Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #d9dbd5;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 100%;
+            background-image: url('/static/chat_app/images/chat_background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #fff;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.06), 0 2px 5px 0 rgba(0,0,0,.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            height: 60px;
+            min-height: 60px;
+            max-height: 60px;
+            background-color: #ffffff;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            flex-shrink: 0;
+        }
+        
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-header-right i {
+            margin-left: 18px;
+            font-size: 20px;
+            color: #cfcfcf;
+        }
+
+        .chat-header-right i.fa-ellipsis-v {
+            margin-right: 10px;
+            color: black;
+        }
+        
+        .back-button {
+            margin-right: 15px;
+            font-size: 24px;
+            color: black;
+        }
+        
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .business-name {
+            font-size: 17px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        
+        .contact-details {
+            font-size: 13px;
+            font-weight: 300;
+            color: #000000;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+        }
+        
+        .chat-header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            background-color: transparent;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            max-width: 65%;
+            position: relative;
+        }
+        
+        .message.received {
+            align-self: flex-start;
+        }
+        
+        .message.sent {
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .message-content {
+            padding: 6px 6px 6px 6px;
+            border-radius: 7px;
+            position: relative;
+            word-wrap: break-word;
+            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+            max-width: 100%;
+            margin-bottom: 1px;
+        }
+        
+        .consecutive-message .message-content {
+            border-top-left-radius: 4px;
+            margin-top: 1px;
+        }
+        
+        .received .message-content {
+            background-color: white;
+        }
+        
+        .sent .message-content {
+            background-color: #dcf8c6;
+        }
+        
+        .message-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .sender-name {
+            font-weight: 500;
+            color: #128c7e;
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+        
+        .message-text {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #262626;
+            word-break: break-word;
+        }
+        
+        .message-meta {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            font-size: 11px;
+            color: #767676;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #8c8c8c;
+            white-space: nowrap;
+            float: right;
+            margin-top: 2px;
+            margin-left: 5px;
+        }
+        
+        .video-message {
+            max-width: 300px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .image-message {
+            padding-top: 4px;
+            max-width: 300px;
+            border-radius: 5px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .image-message img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
+        
+        .image-caption {
+            background-color: white;
+            font-size: 14px;
+            color: #262626;
+            line-height: 1.4;
+            word-break: break-word;
+            margin-top: 2px;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .video-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .video-player.active {
+            display: flex;
+        }
+        
+        .video-player video {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .avatar-small {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .message-wrapper {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+        
+        .message-wrapper.consecutive {
+            margin-top: -4px;
+            margin-bottom: 3px;
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            width: fit-content;
+            margin: 10px 0;
+        }
+        
+        .typing-indicator.active {
+            display: flex;
+        }
+        
+        .typing-dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background-color: #b6b9bb;
+            margin: 0 1px;
+            animation: typing 1.5s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 1s;
+        }
+        
+        @keyframes typing {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .chat-input-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 10px 20px 10px;
+            background-color: transparent;
+            border-top: none;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 25px;
+            padding: 8px 15px;
+            margin: 0 10px 0 0;
+            color: #444;
+            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+            height: 50px;
+        }
+
+        .chat-input input {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: #444;
+            flex: 1;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .chat-input input::placeholder {
+            color: #aaa;
+        }
+
+        .chat-input-icon {
+            color: #666;
+            font-size: 20px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .chat-input-button {
+            display: flex;
+            background-color: #3bb467;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0.5px 1px 1px rgba(0, 0, 0, 0.13);
+        }
+
+        .chat-input-button i {
+            font-size: 20px;
+        }
+
+        .date-separator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px 0px 15px 0px;
+            text-align: center;
+        }
+
+        .date-separator-text {
+            background-color: #f1f1f1;
+            color: #54656f;
+            border-radius: 8px;
+            font-size: 12.5px;
+            padding: 5px 12px;
+            font-weight: 500;
+            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+        }
+
+        .intro-card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+            margin: 40px auto 20px auto;
+            padding: 32px 24px 18px 24px;
+            max-width: 370px;
+            width: calc(100% - 40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .intro-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e1e9ef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .intro-avatar i {
+            font-size: 32px;
+            color: #b0b0b0;
+        }
+        .intro-title {
+            font-size: 19px;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 7px;
+            text-align: center;
+        }
+        .intro-details {
+            font-size: 15px;
+            color: #6a6a6a;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .intro-description {
+            color: #128c7e;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 18px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .intro-groupinfo-btn {
+            border: 1.5px solid #b0b0b0;
+            border-radius: 16px;
+            padding: 8px 0;
+            width: 100%;
+            background: #fff;
+            color: #128c7e;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .intro-groupinfo-btn:hover {
+            background: #f1f1f1;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <i class="fas fa-arrow-left back-button"></i>
+                <img src="/static/chat_app/images/avatar.png" alt="Group Avatar" class="avatar">
+                <div class="header-info">
+                    <div class="business-name">BTS ULTAH AJENG</div>
+                    <div class="contact-details">{{ participant_names }}</div>
+                </div>
+            </div>
+            <div class="chat-header-right">
+                <i class="fas fa-video"></i>
+                <i class="fas fa-phone-alt"></i>
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be added here by JavaScript -->
+            <div class="typing-indicator" id="typingIndicator">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input">
+                <i class="fas fa-smile chat-input-icon"></i>
+                <input type="text" placeholder="Message">
+                <i class="fas fa-paperclip chat-input-icon"></i>
+                <i class="fas fa-camera chat-input-icon"></i>
+            </div>
+            <div class="chat-input-button">
+                <i class="fas fa-microphone"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="video-player" id="videoPlayer">
+        <div class="close-button" onclick="closeVideo()">×</div>
+        <video controls id="videoElement"></video>
+    </div>
+    
+    <div class="video-player" id="imageViewer">
+        <div class="close-button" onclick="closeImage()">×</div>
+        <div style="max-width: 90%; max-height: 90%; display: flex; flex-direction: column; align-items: center;">
+            <img id="imageElement" style="max-width: 100%; max-height: 80vh;">
+            <div id="imageCaption" style="background-color: rgba(255,255,255,0.8); padding: 10px; margin-top: 10px; border-radius: 5px; max-width: 100%; text-align: center; display: none;"></div>
+        </div>
+    </div>
+    
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoElement = document.getElementById('videoElement');
+        const imageViewer = document.getElementById('imageViewer');
+        const imageElement = document.getElementById('imageElement');
+        const imageCaption = document.getElementById('imageCaption');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // Track last message sender
+        let lastMessageSender = null;
+        let lastMessageContainer = null;
+        let lastAvatarContainer = null;
+        let lastContentWrapper = null;
+        let previousMessageDelay = 0;
+
+        const memberDetails = [
+            {
+                name: 'Admin',
+                avatar: '/static/chat_app/images/avatar.png',
+                color: '#3bb467'
+            },
+            {
+                name: 'Azharr',
+                avatar: '/static/chat_app/images/avatar.png',
+                color: '#e74c3c'
+            },
+            {
+                name: 'Aceng',
+                avatar: '/static/chat_app/images/avatar.png',
+                color: '#3498db'
+            },
+            {
+                name: 'ceng',
+                avatar: '/static/chat_app/images/avatar.png',
+                color: '#9b59b6'
+            },
+            {
+                name: 'Alid',
+                avatar: '/static/chat_app/images/avatar.png',
+                color: '#f39c12'
+            },
+        ]
+
+        // Sample messages with videos
+        const messages = [
+            {
+                content: '14 May 2025',
+                message_type: 'separator',
+                timestamp: '09:30'
+            },
+            {
+                message_type: 'intro',
+                title: 'Admin added you',
+                content: '',
+                details: '5 members, 1 contact • Group created\n14 May 2025 by Admin',
+                description: 'Add description…',
+                timestamp: ''
+            },
+            {
+                participant_name: 'Admin',
+                content: 'HALLOO GUYSSS',
+                message_type: 'text',
+                timestamp: '09:30'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'Gw mau ngasih tauu kalo sebulan lagii mau adaa yg ultahh nihhh!!!',
+                message_type: 'text',
+                timestamp: '09:31'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'jadii msing2 dari kaliann siapin surprise yg beda2 yakkk',
+                message_type: 'text',
+                timestamp: '09:31'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'siapa bjirr yg ultah??!',
+                message_type: 'text',
+                timestamp: '09:33'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'tau gaje bet tiba2 ultah siapa co',
+                message_type: 'text',
+                timestamp: '09:34'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'grup apalagi si kebanyakan grup',
+                message_type: 'text',
+                timestamp: '09:35'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'nyimak…',
+                message_type: 'text',
+                timestamp: '09:36'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'SABARR…. pokoknya kalian siapin ajaa surprise terbaik versi kaliann, cluenya ini org cewe wkwkwk',
+                message_type: 'text',
+                timestamp: '09:38'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'yehhh clueless bangettt',
+                message_type: 'text',
+                timestamp: '09:39'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'iyaa dahh nanti malah ga suka lagi klo gw belinya ngasal',
+                message_type: 'text',
+                timestamp: '09:40'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'nii org suka apaa emg??',
+                message_type: 'text',
+                timestamp: '09:42'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'oke2, kalo dari hasil analisa, nihh orang suka banget sama nuansa2 bunga gituh, trus juga suka sama barang2 yg lucuu pasti dia bisa gemes sepanjang hari tuhh',
+                message_type: 'text',
+                timestamp: '09:45'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'OHHIYAA',
+                message_type: 'text',
+                timestamp: '09:45'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'samaa perhiasannn, udahh autoo ga nolakk kalo dikasihh ituuu',
+                message_type: 'text',
+                timestamp: '09:46'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'udahh tuhh tinggal dipikirin ajaa mau beli apaan',
+                message_type: 'text',
+                timestamp: '09:46'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'pastiiiin beda2 jangann ada yg samaa yaaa',
+                message_type: 'text',
+                timestamp: '09:47'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'Waduhh',
+                message_type: 'text',
+                timestamp: '09:48'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'gw yg murah aja deh wkwk',
+                message_type: 'text',
+                timestamp: '09:48'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'yaudahh gw beli bouquet bungaa ajaa simplee',
+                message_type: 'text',
+                timestamp: '09:50'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'anjirr dahh apaan ya',
+                message_type: 'text',
+                timestamp: '09:51'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'pada gamau rugi sue',
+                message_type: 'text',
+                timestamp: '09:52'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'perhiasan gw ajaa gapapaa',
+                message_type: 'text',
+                timestamp: '09:52'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'gw kueenyaa dahhh',
+                message_type: 'text',
+                timestamp: '09:53'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'nanti gw bikin bunga2 jugaa',
+                message_type: 'text',
+                timestamp: '09:53'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'woiiii gw mau beli yg lucu apaannn yakkk!!!',
+                message_type: 'text',
+                timestamp: '09:55'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'WKWKWKWKW',
+                message_type: 'text',
+                timestamp: '09:56'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'di tiktok banyak tuh maenan lucu wkwkk',
+                message_type: 'text',
+                timestamp: '09:57'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'nanti dh gw cari',
+                message_type: 'text',
+                timestamp: '09:58'
+            },
+            {
+                content: '15 May 2025',
+                message_type: 'separator',
+                timestamp: '09:30'
+            },
+            {
+                participant_name: 'Azharr',
+                content: '/static/chat_app/images/chat_bunga.jpg',
+                caption: 'otw pesenn gess🙏🏻',
+                message_type: 'image',
+                timestamp: '10:15'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'anjirrr gw masih belom nemuuu🤧',
+                message_type: 'text',
+                timestamp: '10:18'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'Stress ngebutt yeee wkwkwk',
+                message_type: 'text',
+                timestamp: '10:20'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'WKWKWKWK',
+                message_type: 'text',
+                timestamp: '10:21'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'gw juga udh pesen tinggal nunggu ajaa inimahh',
+                message_type: 'text',
+                timestamp: '10:25'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'anjayy beli perhiasan apee luu',
+                message_type: 'text',
+                timestamp: '10:27'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'tungguin ajeee kaget lu ntar wkwkwk',
+                message_type: 'text',
+                timestamp: '10:28'
+            },
+            {
+                participant_name: 'ceng',
+                content: '/static/chat_app/images/mukena.jpg',
+                caption: 'ini bisa dibilang lucu gasihh? wkwkwk',
+                message_type: 'image',
+                timestamp: '10:30'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'LUCUUUU AJGGGGG',
+                message_type: 'text',
+                timestamp: '10:31'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'auto solat teruss inimah',
+                message_type: 'text',
+                timestamp: '10:32'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'gas udehh pesenn',
+                message_type: 'text',
+                timestamp: '10:32'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'dahh cekout tinggal nunggu',
+                message_type: 'text',
+                timestamp: '10:33'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'mantappp',
+                message_type: 'text',
+                timestamp: '10:35'
+            },
+            {
+                participant_name: 'Alid',
+                content: '/static/chat_app/images/chat_kue.jpg',
+                caption: 'update kue nihh semoga suka yee orgnyaa',
+                message_type: 'image',
+                timestamp: '10:40'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'gokilll',
+                message_type: 'text',
+                timestamp: '10:41'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'anyingg gw doang yg belom ada update yaa wkwkkw',
+                message_type: 'text',
+                timestamp: '10:45'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'besokk sampe harusnyaa',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+        ];
+
+        // Function to create and add a message to the chat
+        function addMessage(message, futureMessage) {
+            // Show typing indicator
+            // if (message.message_type !== 'separator') {
+            //     typingIndicator.classList.add('active');
+            // }
+            
+            // Set timeout to add the message after the delay
+            setTimeout(() => {
+                // Remove typing indicator
+                typingIndicator.classList.remove('active');
+                
+                // Handle separator message type
+                if (message.message_type === 'separator') {
+                    const separatorElement = document.createElement('div');
+                    separatorElement.className = 'date-separator';
+                    
+                    const separatorText = document.createElement('div');
+                    separatorText.className = 'date-separator-text';
+                    separatorText.textContent = message.content;
+                    
+                    separatorElement.appendChild(separatorText);
+                    
+                    chatMessages.insertBefore(separatorElement, typingIndicator);
+                    
+                    // Reset consecutive message tracking
+                    lastMessageSender = null;
+                    lastMessageContainer = null;
+                    lastAvatarContainer = null;
+                    lastContentWrapper = null;
+
+                    // Scroll to the bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Show typing indicator for next message if needed
+                    if (messages.findIndex(m => m.content === message.content) < messages.length - 1) {
+                        setTimeout(() => {
+                            typingIndicator.classList.add('active');
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 1000);
+                    }
+                    
+                    return;
+                }
+                
+                // Handle intro message type
+                if (message.message_type === 'intro') {
+                    const introCard = document.createElement('div');
+                    introCard.className = 'intro-card';
+
+                    // Avatar
+                    const avatar = document.createElement('div');
+                    avatar.className = 'intro-avatar';
+                    avatar.innerHTML = '<i class="fas fa-users"></i>';
+                    introCard.appendChild(avatar);
+
+                    // Title
+                    const title = document.createElement('div');
+                    title.className = 'intro-title';
+                    title.textContent = message.title || '';
+                    introCard.appendChild(title);
+
+                    // Details
+                    const details = document.createElement('div');
+                    details.className = 'intro-details';
+                    details.textContent = message.details || '';
+                    introCard.appendChild(details);
+
+                    // Description
+                    const description = document.createElement('div');
+                    description.className = 'intro-description';
+                    description.textContent = message.description || 'Add description…';
+                    introCard.appendChild(description);
+
+                    // Group info button
+                    const groupInfoBtn = document.createElement('button');
+                    groupInfoBtn.className = 'intro-groupinfo-btn';
+                    groupInfoBtn.innerHTML = '<i class="fas fa-info-circle"></i> Group info';
+                    introCard.appendChild(groupInfoBtn);
+
+                    chatMessages.insertBefore(introCard, typingIndicator);
+
+                    // Scroll to the bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                    // Show typing indicator for next message if needed
+                    if (messages.findIndex(m => m.content === message.content) < messages.length - 1) {
+                        setTimeout(() => {
+                            typingIndicator.classList.add('active');
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 1000);
+                    }
+                    return;
+                }
+                
+                // Check if message is from the same sender as the last one
+                const isConsecutive = lastMessageSender === message.participant_name;
+                
+                // Create message element
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message-wrapper';
+                if (isConsecutive) {
+                    messageElement.classList.add('consecutive');
+                }
+                messageElement.setAttribute('data-sender', message.participant_name);
+                
+                const messageContentWrapper = document.createElement('div');
+                messageContentWrapper.className = 'message received';
+                messageContentWrapper.style.margin = '0px 0px 5px';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                
+                // Only show avatar and name for first message in a sequence
+                const avatarElement = document.createElement('img');
+                avatarElement.src = memberDetails.find(p => p.name === message.participant_name).avatar;
+                avatarElement.className = 'avatar-small';
+                avatarElement.alt = message.participant_name;
+                messageElement.appendChild(avatarElement);
+                if (!isConsecutive) {
+                    // Add sender name
+                    const senderName = document.createElement('div');
+                    senderName.className = 'sender-name';
+                    senderName.textContent = message.participant_name;
+                    senderName.style.color = memberDetails.find(p => p.name === message.participant_name).color;
+                    messageContent.appendChild(senderName);
+                } else {
+                    // For consecutive messages, we don't need to show the avatar
+                    avatarElement.style.visibility = 'hidden';
+                    // Add consecutive message class for styling
+                    messageContent.classList.add('consecutive-message');
+                    // Keep the space where avatar would be to maintain alignment
+                    // messageElement.style.paddingLeft = '35px';
+                    // Remove all margin from lastAvatarContainer
+                    messageElement.style.margin = '0px 0px 5px';
+
+                    lastContentWrapper.style.margin = '0px 0px 1px';
+
+                    lastMessageContainer.style.margin = '0';
+                }
+                
+                lastAvatarContainer = avatarElement;
+                
+                // Add message content based on type
+                if (message.message_type === 'text') {
+                    // Create message row for text and timestamp
+                    const messageRow = document.createElement('div');
+                    messageRow.className = 'message-row';
+                    
+                    // Add message text
+                    const messageText = document.createElement('div');
+                    messageText.className = 'message-text';
+                    messageText.textContent = message.content;
+                    messageRow.appendChild(messageText);
+                    
+                    // Add message meta (timestamp)
+                    const messageMeta = document.createElement('div');
+                    messageMeta.className = 'message-meta';
+                    
+                    const messageTime = document.createElement('span');
+                    messageTime.className = 'message-time';
+                    messageTime.textContent = message.timestamp;
+                    messageMeta.appendChild(messageTime);
+                    
+                    // For short messages (less than 30 characters), place timestamp beside text
+                    // For longer messages, place timestamp below text
+                    if (message.content.length < 30) {
+                        messageRow.appendChild(messageMeta);
+                        messageTime.style.marginBottom = '2px';
+                    } else {
+                        messageRow.style.flexDirection = 'column';
+                        messageRow.style.alignItems = 'flex-start';
+                        messageRow.appendChild(messageMeta);
+                        messageMeta.style.alignSelf = 'flex-end';
+                        messageMeta.style.marginTop = '2px';
+                    }
+                    
+                    messageContent.appendChild(messageRow);
+                } else if (message.message_type === 'video') {
+                    const videoThumbnail = document.createElement('div');
+                    videoThumbnail.className = 'video-message';
+                    videoThumbnail.innerHTML = `
+                        <img src="/static/chat_app/images/avatar.png" width="100%" alt="Video">
+                        <div style="display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                            <div style="width: 50px; height: 50px; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <div style="width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 15px solid white; margin-left: 5px;"></div>
+                            </div>
+                        </div>
+                    `;
+                    videoThumbnail.style.position = 'relative';
+                    videoThumbnail.dataset.videoSrc = message.content;
+                    videoThumbnail.addEventListener('click', () => playVideo(message.content));
+                    messageContent.appendChild(videoThumbnail);
+                    
+                    // Add message meta (timestamp) for video
+                    const messageMeta = document.createElement('div');
+                    messageMeta.className = 'message-meta';
+                    messageMeta.style.marginTop = '2px';
+                    
+                    const messageTime = document.createElement('span');
+                    messageTime.className = 'message-time';
+                    messageTime.textContent = message.timestamp;
+                    messageMeta.appendChild(messageTime);
+                    
+                    messageContent.appendChild(messageMeta);
+                } else if (message.message_type === 'image') {
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-message';
+                    
+                    const image = document.createElement('img');
+                    image.src = message.content;
+                    image.alt = 'Image';
+                    imageContainer.appendChild(image);
+                    
+                    // Add caption if it exists
+                    if (message.caption) {
+                        const captionElement = document.createElement('div');
+                        captionElement.className = 'image-caption';
+                        captionElement.textContent = message.caption;
+                        imageContainer.appendChild(captionElement);
+                    }
+                    
+                    imageContainer.addEventListener('click', () => showImage(message.content, message.caption));
+                    messageContent.appendChild(imageContainer);
+                    
+                    // Add message meta (timestamp) for image
+                    const messageMeta = document.createElement('div');
+                    messageMeta.className = 'message-meta';
+                    messageMeta.style.marginTop = '2px';
+                    
+                    const messageTime = document.createElement('span');
+                    messageTime.className = 'message-time';
+                    messageTime.textContent = message.timestamp;
+                    messageMeta.appendChild(messageTime);
+                    
+                    messageContent.appendChild(messageMeta);
+                }
+                
+                messageContentWrapper.appendChild(messageContent);
+                
+                messageElement.appendChild(messageContentWrapper);
+                
+                chatMessages.insertBefore(messageElement, typingIndicator);
+                
+                // Update last message sender
+                lastMessageSender = message.participant_name;
+                lastMessageContainer = messageElement;
+                lastContentWrapper = messageContentWrapper;
+                
+                // Scroll to the bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Show typing indicator for next message
+                if (messages.findIndex(m => m.content === message.content) < messages.length - 1) {
+                    if (futureMessage.message_type !== 'separator' && futureMessage.message_type !== 'intro') {
+                        setTimeout(() => {
+                            typingIndicator.classList.add('active');
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 1000);
+                    }
+                }
+                
+            }, message.content.length * 80 + previousMessageDelay);
+
+            previousMessageDelay += message.content.length * 80;
+
+            if (futureMessage.message_type === 'separator') {
+                previousMessageDelay += 3000;
+            }
+        }
+        
+        // Function to play video
+        function playVideo(videoSrc) {
+            videoElement.src = videoSrc;
+            videoPlayer.classList.add('active');
+            videoElement.play();
+        }
+        
+        // Function to close video
+        function closeVideo() {
+            videoPlayer.classList.remove('active');
+            videoElement.pause();
+            videoElement.src = '';
+        }
+        
+        // Function to show image in fullscreen
+        function showImage(imageSrc, caption) {
+            imageElement.src = imageSrc;
+            if (caption) {
+                imageCaption.textContent = caption;
+                imageCaption.style.display = 'block';
+            } else {
+                imageCaption.style.display = 'none';
+            }
+            imageViewer.classList.add('active');
+        }
+        
+        // Function to close image
+        function closeImage() {
+            imageViewer.classList.remove('active');
+            imageElement.src = '';
+            imageCaption.textContent = '';
+        }
+        
+        // Start displaying messages
+        let currentIndex = 0;
+        
+        function startMessages() {
+            if (currentIndex < messages.length) {
+                addMessage(messages[currentIndex], messages[currentIndex+1]);
+                currentIndex++;
+                
+                // Schedule next message
+                if (currentIndex < messages.length) {
+                    setTimeout(startMessages, 500);
+                }
+            }
+        }
+        
+        // Start the chat when page loads
+        window.onload = function() {
+            // Show typing indicator immediately
+            // typingIndicator.classList.add('active');
+            
+            // Start displaying messages after a short delay
+            setTimeout(startMessages, 1000);
+        };
+    </script>
+</body>
+</html> 

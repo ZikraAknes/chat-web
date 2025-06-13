@@ -7,6 +7,7 @@ app_name = 'chat_app'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('chat/', views.chat, name='chat'),
 ]
 
 if settings.DEBUG:

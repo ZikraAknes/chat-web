@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import Participant, Message
 import json
 
-def home(request):
+def chat(request):
     participants = Participant.objects.all()
     messages = Message.objects.all().order_by('id')
     
@@ -15,8 +15,12 @@ def home(request):
     if len(participant_names) > 30:
         participant_names = participant_names[:30] + "..."
     
-    return render(request, 'chat_app/index.html', {
+    return render(request, 'chat_app/chat.html', {
         'participants': participants, 
         'messages': messages,
         'participant_names': participant_names
     })
+
+def home(request):
+    
+    return render(request, 'chat_app/index.html')
