@@ -457,6 +457,20 @@
         .intro-groupinfo-btn:hover {
             background: #f1f1f1;
         }
+        .group-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e1e9ef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        .group-avatar i {
+            font-size: 20px;
+            color: #b0b0b0;
+        }
 
     </style>
 </head>
@@ -465,7 +479,9 @@
         <div class="chat-header">
             <div class="chat-header-left">
                 <i class="fas fa-arrow-left back-button"></i>
-                <img src="/static/chat_app/images/avatar.png" alt="Group Avatar" class="avatar">
+                <div class="group-avatar">
+                    <i class="fas fa-users"></i>
+                </div>
                 <div class="header-info">
                     <div class="business-name">BTS ULTAH AJENG</div>
                     <div class="contact-details">{{ participant_names }}</div>
@@ -563,14 +579,6 @@
                 content: '14 May 2025',
                 message_type: 'separator',
                 timestamp: '09:30'
-            },
-            {
-                message_type: 'intro',
-                title: 'Admin added you',
-                content: '',
-                details: '5 members, 1 contact • Group created\n14 May 2025 by Admin',
-                description: 'Add description…',
-                timestamp: ''
             },
             {
                 participant_name: 'Admin',
@@ -849,6 +857,69 @@
                 content: 'besokk sampe harusnyaa',
                 message_type: 'text',
                 timestamp: '10:46'
+            },
+            {
+                participant_name: 'Aceng',
+                content: '/static/chat_app/images/pandora.jpg',
+                caption: 'sampeeee nihhh!!! WKWKWK',
+                message_type: 'image',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'KELASZZZZ',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'Azharr',
+                content: 'WKWKWKWK',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'C',
+                content: 'Mahalll nihhhh',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'NAHH UDAHH REDY SEMUA YAA???',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'Admin',
+                content: 'abis ini gw masukin orangnya ke grup inii, trus kalian ucapin ke orangnya langsung yakkk',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'Alid',
+                content: 'hahhh ngapain diundang kesini coo',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'Aceng',
+                content: 'wahh ngomong apaa niii',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                participant_name: 'ceng',
+                content: 'WKWKWK',
+                message_type: 'text',
+                timestamp: '10:46'
+            },
+            {
+                message_type: 'intro',
+                title: 'Admin added you',
+                content: '',
+                details: '5 members, 1 contact • Group created\n14 May 2025 by Admin',
+                description: 'Add description…',
+                timestamp: ''
             },
         ];
 
