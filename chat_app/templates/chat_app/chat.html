@@ -1242,9 +1242,9 @@
                     }
                 }
                 
-            }, message.content.length * 80 + previousMessageDelay);
+            }, message.content.length * 25 + previousMessageDelay);
 
-            previousMessageDelay += message.content.length * 80;
+            previousMessageDelay += message.content.length * 25;
 
             if (futureMessage.message_type === 'separator') {
                 previousMessageDelay += 3000;
