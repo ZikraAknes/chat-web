@@ -1124,7 +1124,7 @@
                     // Add message text
                     const messageText = document.createElement('div');
                     messageText.className = 'message-text';
-                    messageText.textContent = message.content;
+                    messageText.innerHTML = message.content.replace(/\n/g, '<br>');
                     messageRow.appendChild(messageText);
                     
                     // Add message meta (timestamp)
