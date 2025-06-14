@@ -1004,13 +1004,13 @@
                     lastContentWrapper = null;
 
                     // Scroll to the bottom
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    // chatMessages.scrollTop = chatMessages.scrollHeight;
                     
                     // Show typing indicator for next message if needed
                     if (messages.findIndex(m => m.content === message.content) < messages.length - 1) {
                         setTimeout(() => {
                             typingIndicator.classList.add('active');
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                            // chatMessages.scrollTop = chatMessages.scrollHeight;
                         }, 1000);
                     }
                     
@@ -1055,13 +1055,13 @@
                     chatMessages.insertBefore(introCard, typingIndicator);
 
                     // Scroll to the bottom
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    // chatMessages.scrollTop = chatMessages.scrollHeight;
 
                     // Show typing indicator for next message if needed
                     if (messages.findIndex(m => m.content === message.content) < messages.length - 1) {
                         setTimeout(() => {
                             typingIndicator.classList.add('active');
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                            // chatMessages.scrollTop = chatMessages.scrollHeight;
                         }, 1000);
                     }
                     return;
@@ -1222,14 +1222,14 @@
                 lastContentWrapper = messageContentWrapper;
                 
                 // Scroll to the bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                // chatMessages.scrollTop = chatMessages.scrollHeight;
                 
                 // Show typing indicator for next message
                 if (messages.findIndex(m => m.content === message.content) < messages.length - 1) {
                     if (futureMessage.message_type !== 'separator' && futureMessage.message_type !== 'intro') {
                         setTimeout(() => {
                             typingIndicator.classList.add('active');
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                            // chatMessages.scrollTop = chatMessages.scrollHeight;
                         }, 1000);
                     }
                 }
